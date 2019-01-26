@@ -6,6 +6,7 @@ public class CameraFollow : MonoBehaviour
 {
     [SerializeField] GameObject followTarget;
     [SerializeField] float smoothTime = 1.0f;
+    [SerializeField] float xOffset;
     private float newX;
     private float vel;
     private Vector3 newPos;
@@ -24,7 +25,7 @@ public class CameraFollow : MonoBehaviour
 
     private void FixedUpdate()
     {
-        newX = Mathf.SmoothDamp(transform.position.x, followTarget.transform.position.x, ref vel, smoothTime);
+        newX = Mathf.SmoothDamp(transform.position.x, followTarget.transform.position.x + xOffset, ref vel, smoothTime);
         newPos.x = newX;
         newPos.y = transform.position.y;
         newPos.z = transform.position.z;
