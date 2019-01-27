@@ -2411,7 +2411,7 @@ MonoBehaviour:
   playerCanvas: {fileID: 860570989}
   run1: {fileID: 8300000, guid: f654d52b7e376594fad5db6baf8c06de, type: 3}
   run2: {fileID: 8300000, guid: c8098245fd58b854f8ccd7719f0bd55d, type: 3}
-  launch: {fileID: 0}
+  launch: {fileID: 8300000, guid: 07f793ce73bacd743800230e67f222a9, type: 3}
 --- !u!114 &1094440549
 MonoBehaviour:
   m_ObjectHideFlags: 0
