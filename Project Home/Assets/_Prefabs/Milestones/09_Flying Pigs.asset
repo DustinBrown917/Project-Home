@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   milestoneName: Grew a Flying Pig
   milestoneDescription: 
-  _sprite: {fileID: 0}
+  _sprite: {fileID: 21300000, guid: 5bf07acaba4763e42ac0b8ba67a38051, type: 3}
   milestoneDistance: 5000

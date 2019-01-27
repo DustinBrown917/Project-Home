@@ -11,11 +11,13 @@ namespace HOME
         [SerializeField] private float pickupValue;
         [SerializeField] private SpriteRenderer outlineRenderer;
         [SerializeField] private string itemDescription;
+        [SerializeField] private AudioClip clip;
 
         private bool pickedUp = false;
 
         private void Awake()
         {
+            
         }
 
         private void OnEnable()
@@ -44,6 +46,7 @@ namespace HOME
             {
                 p.SetCurrentFunds(p.CurrentFunds + pickupValue);
                 UIManager.Instance.BroadCastHighImpact(itemDescription, (pickupValue > 0));
+                PickupManager.Instance.PlaySound(pickupValue > 0);
             }
 
             OnPickedUp();

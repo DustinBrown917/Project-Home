@@ -12,7 +12,11 @@ namespace HOME
         private static List<Pickup> pooledPickups = new List<Pickup>();
         private static List<Pickup> activePickups = new List<Pickup>();
 
+
         [SerializeField] private PickupPool pickups;
+        private AudioSource audioSource;
+        [SerializeField] private AudioClip goodSound;
+        [SerializeField] private AudioClip badSound;
 
         private void Awake()
         {
@@ -25,6 +29,8 @@ namespace HOME
                     PoolPickup(pickups.GetRandomPickup());
                     pooledPickups[i].transform.SetParent(transform);
                 }
+
+                audioSource = GetComponent<AudioSource>();
 
             } else
             {
@@ -57,6 +63,19 @@ namespace HOME
             activePickups.Remove(p);
             pooledPickups.Add(p);
             p.gameObject.SetActive(false);
+        }
+
+        public void PlaySound(bool good)
+        {
+            if (good)
+            {
+                audioSource.clip = goodSound;
+            } else
+            {
+                audioSource.clip = badSound;
+            }
+
+            audioSource.Play();
         }
 
       

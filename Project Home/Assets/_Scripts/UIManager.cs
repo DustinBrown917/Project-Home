@@ -14,6 +14,7 @@ namespace HOME
         [SerializeField] private Text currentFundsText;
         [SerializeField] private Text distanceText;
         [SerializeField] private RiseAndFlashText highImpactText;
+        [SerializeField] private Slider progressSlider;
         private Coroutine cr_DistanceTimer = null;
         private Coroutine cr_ResetTimer = null;
 
@@ -68,6 +69,9 @@ namespace HOME
             {
                 yield return wfs;
                 distanceText.text = Player.Instance.transform.position.x.ToString("F2") + "m";
+
+                progressSlider.value = Player.Instance.transform.position.x;
+
                 if (Player.Instance.CurrentVelocity == 0.0f && cr_ResetTimer == null) 
                 {
                     if (GameManager.Instance.CurrenState == GameStates.PLAYING) {

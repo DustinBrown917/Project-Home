@@ -158,4 +158,21 @@ public class CREffects : MonoBehaviour {
 
         if (endEvent != null) { endEvent(); }
     }
+
+
+    public static IEnumerator ZoomToPosition(Transform trans, Vector3 initialPosition, Vector3 targetPosition, float zoomTime, Action endEvent = null)
+    {
+        trans.position = initialPosition;
+        float elapsedTime = 0;
+        while (elapsedTime < zoomTime)
+        {
+            elapsedTime += Time.deltaTime;
+            trans.position = Vector3.Lerp(initialPosition, targetPosition, elapsedTime / zoomTime);
+            yield return null;
+        }
+        trans.position = targetPosition;
+
+        if (endEvent != null) { endEvent(); }
+    }
+
 }

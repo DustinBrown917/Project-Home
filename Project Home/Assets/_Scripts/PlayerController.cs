@@ -12,6 +12,9 @@ namespace HOME {
         [SerializeField] private LayerMask whatIsGround;
         [SerializeField] private float jumpForce;
         [SerializeField] private float maxSpeed;
+        [SerializeField] private float maxSpeedFactor;
+        [SerializeField] private float minSpeedFactor;
+        private float currentSpeedFactor;
 
         private Animator animator;
         private bool airbornLastFrame = false;
@@ -51,6 +54,9 @@ namespace HOME {
             }
 
             animator.SetBool("airborne", !IsGrounded());
+
+            currentSpeedFactor = Mathf.Lerp(minSpeedFactor, maxSpeedFactor, rb2d.velocity.x / maxSpeed);
+            animator.speed = currentSpeedFactor;
         }
 
         public void Jump()

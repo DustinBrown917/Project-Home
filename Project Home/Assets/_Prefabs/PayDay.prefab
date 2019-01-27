@@ -208,6 +208,7 @@ MonoBehaviour:
   pickupValue: 300
   outlineRenderer: {fileID: 0}
   itemDescription: Pay Day! Freakin' Finally!
+  clip: {fileID: 8300000, guid: deef82add2288914c936d66f6ea0344f, type: 3}
 --- !u!50 &5839319978363382115
 Rigidbody2D:
   serializedVersion: 4

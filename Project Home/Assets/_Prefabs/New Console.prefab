@@ -208,6 +208,7 @@ MonoBehaviour:
   pickupValue: -300
   outlineRenderer: {fileID: 0}
   itemDescription: Finally Got the Nintendo Splat! Itsa Me!
+  clip: {fileID: 8300000, guid: ecd18fb2bc49a9047bb024fc2728bd95, type: 3}
 --- !u!50 &5839319978363382115
 Rigidbody2D:
   serializedVersion: 4

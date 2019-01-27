@@ -14,6 +14,7 @@ namespace HOME
         public float CurrentVelocity { get { return pc.Rb2d.velocity.x; } }
 
         [SerializeField] private MileStone[] achievements;
+        public MileStone[] MileStones { get { return achievements; } } //Gamejam bad code!
 
         [SerializeField] float _runStartFunds = 10000.0f;
 
@@ -30,6 +31,11 @@ namespace HOME
         [SerializeField] private RiseAndFlashText toastText;
         [SerializeField] private Transform textTarget;
         [SerializeField] private Canvas playerCanvas;
+
+        private AudioSource audioSource;
+        [SerializeField] private AudioClip run1;
+        [SerializeField] private AudioClip run2;
+        [SerializeField] private AudioClip launch;
 
         private bool sliding;
         private bool handleInput = false;
@@ -54,6 +60,7 @@ namespace HOME
             rwPlayer = ReInput.players.GetPlayer(0);
             pc = GetComponent<PlayerController>();
             animator = GetComponent<Animator>();
+            audioSource = GetComponent<AudioSource>();
         }
 
         // Start is called before the first frame update
@@ -146,6 +153,8 @@ namespace HOME
         {
             SetCurrentFunds(_runStartFunds * GetLevel());
             pc.Propel(initialForce);
+            audioSource.clip = launch;
+            audioSource.Play();
             handleInput = true;
             CoroutineManager.BeginCoroutine(CheckAchievementsRoutine(), ref cr_AchievementChecker, this);
         }
@@ -161,6 +170,13 @@ namespace HOME
             }
         }
 
+        public void PlayRunSound(int sound)
+        {
+            if(sound == 1) { audioSource.clip = run1; }
+            else { audioSource.clip = run2; }
+
+            audioSource.Play();
+        }
 
         private IEnumerator CheckAchievementsRoutine()
         {
