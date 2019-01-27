@@ -20,7 +20,7 @@ namespace HOME
             {
                 _instance = this;
 
-                for(int i = 0; i < 10; i++)
+                for(int i = 0; i < 20; i++)
                 {
                     PoolPickup(pickups.GetRandomPickup());
                     pooledPickups[i].transform.SetParent(transform);
@@ -40,16 +40,20 @@ namespace HOME
             }
         }
 
-        public static Pickup GetPooledPickup()
+        public static Pickup ActivatePickup()
         {
+            if(pooledPickups.Count == 0) { return null; }
             Pickup pu = pooledPickups[0];
             pooledPickups.Remove(pu);
+            activePickups.Add(pu);
+            pu.gameObject.SetActive(true);
 
             return pu;
         }
 
         public static void PoolPickup(Pickup p)
         {
+            if(p == null) { return; }
             activePickups.Remove(p);
             pooledPickups.Add(p);
             p.gameObject.SetActive(false);

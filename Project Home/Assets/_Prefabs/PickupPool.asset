@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e16d500a9ab9434f99ab5639f72ccae, type: 3}
+  m_Name: PickupPool
+  m_EditorClassIdentifier: 
+  Pickups:
+  - {fileID: 7522067634632942813, guid: 6ec6defdab716b34884cfc72715409c7, type: 3}
+  - {fileID: 7522067634632942813, guid: 1abd781717523f240958dde3aa479ea9, type: 3}
+  - {fileID: 7522067634632942813, guid: a3532a92561b05d49beb99325a77d179, type: 3}
+  - {fileID: 7522067634632942813, guid: df45a0d8077f69c4aa0f5525f861e66f, type: 3}
+  - {fileID: 7522067634632942813, guid: c17f085df913fec47b8dd65f1b893c1e, type: 3}
+  - {fileID: 7522067634632942813, guid: f616ae1e6780b714dbed99c7b89f6a17, type: 3}
+  - {fileID: 7522067634632942813, guid: 801d9fba0b9fe574a9bc0efa88388cd9, type: 3}
+  - {fileID: 7522067634632942813, guid: 3d50bca9d3f61344788fbc895c267d7a, type: 3}
+  - {fileID: 7522067634632942813, guid: 4091fae2edaa3df4b9a292c08ad227fd, type: 3}
+  - {fileID: 7522067634632942813, guid: 40324bbf2c1b2ef41b9ae1ef0da8db16, type: 3}
