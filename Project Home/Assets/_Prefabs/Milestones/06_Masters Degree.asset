@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: 06_Masters Degree
   m_EditorClassIdentifier: 
   milestoneName: Masters Degree
-  milestoneDescription: 
+  milestoneDescription: Graduate Degree? Nice!
   _sprite: {fileID: 21300000, guid: d9dfef786fdea8248850c5125307ac92, type: 3}
   milestoneDistance: 3500

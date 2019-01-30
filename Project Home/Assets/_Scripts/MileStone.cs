@@ -20,7 +20,8 @@ namespace HOME
         public void Achieve()
         {
             _achieved = true;
-            UIManager.Instance.BroadCastHighImpact("Achieved " + milestoneName + "!", true);
+            UIManager.Instance.BroadCastLowImpact(milestoneDescription, true);
+            UIManager.Instance.PlayAchievementSound();
         }
 
         public void Unachieve()

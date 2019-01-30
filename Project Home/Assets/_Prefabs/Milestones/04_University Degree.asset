@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: 04_University Degree
   m_EditorClassIdentifier: 
   milestoneName: University Degree
-  milestoneDescription: 
+  milestoneDescription: You got a Degree!
   _sprite: {fileID: 21300000, guid: 37934de415113b849ad81a02d97f2fb8, type: 3}
   milestoneDistance: 2500

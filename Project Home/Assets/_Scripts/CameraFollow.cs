@@ -13,6 +13,7 @@ namespace HOME
         private float vel;
         private Vector3 newPos;
 
+        private bool follow = true;
         // Start is called before the first frame update
         void Start()
         {
@@ -35,8 +36,14 @@ namespace HOME
             transform.position = new Vector3(followTarget.transform.position.x, transform.position.y, transform.position.z);
         }
 
+        public void SetFollow(bool follow)
+        {
+            this.follow = follow;
+        }
+
         private void FixedUpdate()
         {
+            if (!follow) { return; }
             newX = Mathf.SmoothDamp(transform.position.x, followTarget.transform.position.x + xOffset, ref vel, smoothTime);
             newPos.x = newX;
             newPos.y = transform.position.y;

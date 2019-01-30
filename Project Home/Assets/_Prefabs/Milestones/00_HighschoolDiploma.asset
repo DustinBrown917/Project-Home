@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: 00_HighschoolDiploma
   m_EditorClassIdentifier: 
   milestoneName: Highschool Diploma
-  milestoneDescription: 
+  milestoneDescription: Earned your Highschool Diploma!
   _sprite: {fileID: 21300000, guid: 3a97ef4ec1db07a4e9c853efe6bf07ad, type: 3}
   milestoneDistance: 500

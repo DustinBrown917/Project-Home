@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: 07_Made Healthy Meal
   m_EditorClassIdentifier: 
   milestoneName: Made a Healthy Meal
-  milestoneDescription: 
+  milestoneDescription: You Made Your First Healthy Meal!
   _sprite: {fileID: 21300000, guid: 33ca73897619c8b4aa4e9d6df522a988, type: 3}
   milestoneDistance: 4000

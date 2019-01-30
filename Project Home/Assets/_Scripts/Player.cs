@@ -36,6 +36,7 @@ namespace HOME
         [SerializeField] private AudioClip run1;
         [SerializeField] private AudioClip run2;
         [SerializeField] private AudioClip launch;
+        [SerializeField] private AudioClip slide;
 
         private bool sliding;
         private bool handleInput = false;
@@ -83,6 +84,7 @@ namespace HOME
         // Update is called once per frame
         void Update()
         {
+
             if (!handleInput) { return; }
             GetRuns();
         }
@@ -124,6 +126,12 @@ namespace HOME
                 sliding = false;
                 animator.SetBool("sliding", sliding);
             }
+        }
+
+        public void PlaySlideSound()
+        {
+            audioSource.clip = slide;
+            audioSource.Play();
         }
 
         public void SetCurrentFunds(float funds)
@@ -188,6 +196,10 @@ namespace HOME
                     if (transform.position.x > achievements[i].GoalDistance && !achievements[i].Achieved)
                     {
                         achievements[i].Achieve();
+                        if(i == achievements.Length - 1)
+                        {
+                            GameManager.Instance.Victory();
+                        }
                         break;
                     }
                 }

@@ -14,16 +14,23 @@ namespace HOME
         [SerializeField] private Text currentFundsText;
         [SerializeField] private Text distanceText;
         [SerializeField] private RiseAndFlashText highImpactText;
+        [SerializeField] private RiseAndFlashText lowImpactText;
         [SerializeField] private Slider progressSlider;
         private Coroutine cr_DistanceTimer = null;
         private Coroutine cr_ResetTimer = null;
 
+        private AudioSource audioSource;
+        [SerializeField] private AudioClip countdownSound;
+        [SerializeField] private AudioClip loseSound;
+        [SerializeField] private AudioClip achievementSound;
+        [SerializeField] private AudioClip warningSound;
 
         private void Awake()
         {
             if (_instance == null)
             {
                 _instance = this;
+                audioSource = GetComponent<AudioSource>();
             }
             else
             {
@@ -38,6 +45,8 @@ namespace HOME
             CoroutineManager.BeginCoroutine(UpdateDistanceText(), ref cr_DistanceTimer, this);
             highImpactText.ResetText();
             highImpactText.gameObject.SetActive(false);
+            lowImpactText.ResetText();
+            lowImpactText.gameObject.SetActive(false);
         }
 
         private void Instance_FundsChanged(object sender, Player.FundsChangedArgs e)
@@ -60,6 +69,15 @@ namespace HOME
             highImpactText.SetGoodBad(good);
             highImpactText.gameObject.SetActive(true);
             highImpactText.BeginAnimate();
+        }
+
+        public void BroadCastLowImpact(string str, bool good)
+        {
+            lowImpactText.ResetText();
+            lowImpactText.SetText(str);
+            lowImpactText.SetGoodBad(good);
+            lowImpactText.gameObject.SetActive(true);
+            lowImpactText.BeginAnimate();
         }
 
         private IEnumerator UpdateDistanceText()
@@ -91,8 +109,12 @@ namespace HOME
                 UIManager.Instance.BroadCastHighImpact("Keep Moving!", false);
             }
             else {
-                UIManager.Instance.BroadCastHighImpact("Broke as the Berlin Wall!", false);
+                UIManager.Instance.BroadCastHighImpact("Broke as the Berlin Wall!", false);              
             }
+
+            audioSource.clip = warningSound;
+            audioSource.Play();
+
             yield return new WaitForSeconds(2.0f);
 
             float seconds = 3.0f;
@@ -104,14 +126,26 @@ namespace HOME
                 {
                     intSeconds = (int)seconds;
                     UIManager.Instance.BroadCastHighImpact((intSeconds + 1).ToString(), false);
+                    audioSource.clip = countdownSound;
+                    audioSource.Play();
                 }
 
                 seconds -= Time.deltaTime;
                 yield return null;
             }
-            UIManager.Instance.BroadCastHighImpact("Awh Man!", false);
+            UIManager.Instance.BroadCastHighImpact("Parents! More Money Please!", false);
+            audioSource.clip = loseSound;
+            audioSource.Play();
             GameManager.Instance.ResetRun();
         }
+
+        public void PlayAchievementSound()
+        {
+            audioSource.clip = achievementSound;
+            audioSource.Play();
+        }
     }
+
+
 }
 

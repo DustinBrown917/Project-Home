@@ -15,6 +15,13 @@ namespace HOME
 
         private Coroutine cr_BeginPlayTimer = null;
 
+        [SerializeField] CameraFollow cameraFollower;
+        [SerializeField] CanvasGroup endScreenCanvasGroup;
+        [SerializeField] private float endScreenFadeDuration;
+        [SerializeField] private float endScreenWaitTime;
+        private Coroutine cr_EndScreen;
+        [SerializeField] private string startScreenName;
+
         private void Awake()
         {
             if(_instance == null) {
@@ -82,6 +89,30 @@ namespace HOME
         {
             PlayBegins?.Invoke(this, EventArgs.Empty);
         }
+
+        public void Victory()
+        {
+            CoroutineManager.BeginCoroutine(VictoryScreen(), ref cr_EndScreen, this);
+        }
+
+        private IEnumerator VictoryScreen()
+        {
+            cameraFollower.SetFollow(false);
+            _currentState = GameStates.POST_PLAY;
+            yield return new WaitForSeconds(3);
+            float t = 0;
+            endScreenCanvasGroup.gameObject.SetActive(true);
+            while (t < endScreenFadeDuration)
+            {
+                endScreenCanvasGroup.alpha = t / endScreenFadeDuration;
+                t += Time.deltaTime;
+                yield return null;
+            }
+
+            yield return new WaitForSeconds(endScreenWaitTime);
+
+            SceneTransitioner.Instance.LoadScene(startScreenName);
+        }
     }
 
     
@@ -91,6 +122,7 @@ namespace HOME
 public enum GameStates
 {
     PRE_PLAY,
-    PLAYING
+    PLAYING,
+    POST_PLAY
 }
 

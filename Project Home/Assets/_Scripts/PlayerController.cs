@@ -19,10 +19,14 @@ namespace HOME {
         private Animator animator;
         private bool airbornLastFrame = false;
 
+        private AudioSource audioSource;
+        [SerializeField] private AudioClip jumpSound;
+
         private void Awake()
         {
             rb2d = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
+            audioSource = GetComponent<AudioSource>();
         }
 
         // Start is called before the first frame update
@@ -65,6 +69,8 @@ namespace HOME {
             rb2d.AddForce(new Vector2(0.0f, jumpForce));
             airbornLastFrame = true;
             animator.SetBool("airborne", true);
+            audioSource.clip = jumpSound;
+            audioSource.Play();
         }
 
         public bool IsGrounded()

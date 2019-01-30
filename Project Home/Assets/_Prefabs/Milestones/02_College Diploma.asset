@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: 02_College Diploma
   m_EditorClassIdentifier: 
   milestoneName: College Diploma
-  milestoneDescription: 
+  milestoneDescription: Completed College!
   _sprite: {fileID: 21300000, guid: 172052d0f7b46ed4ea3b8f1062fef797, type: 3}
   milestoneDistance: 1500
