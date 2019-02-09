@@ -12,17 +12,23 @@ namespace HOME
         [SerializeField] private SpriteRenderer outlineRenderer;
         [SerializeField] private string itemDescription;
         [SerializeField] private AudioClip clip;
+        private Rigidbody2D rb2d;
+
+        private Vector3 cachedPosition;
 
         private bool pickedUp = false;
 
         private void Awake()
         {
-            
+            rb2d = GetComponent<Rigidbody2D>();
         }
 
         private void OnEnable()
         {
             pickedUp = false;
+            cachedPosition = transform.position;
+            cachedPosition.x = 0;
+            transform.position = cachedPosition;
         }
 
         // Start is called before the first frame update

@@ -2704,7 +2704,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   jumpForce: 750
-  maxSpeed: 25
+  normalMaxSpeed: 25
+  dancePadMaxSpeed: 15
   maxSpeedFactor: 2
   minSpeedFactor: 0.5
   jumpSound: {fileID: 8300000, guid: 5967f6e17016d8d4ea8dc9ef05c2676a, type: 3}

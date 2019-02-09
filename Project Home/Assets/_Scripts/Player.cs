@@ -40,6 +40,7 @@ namespace HOME
 
         private bool sliding;
         private bool handleInput = false;
+        private bool hadFootDownLastFrame = false;
 
         private Animator animator;
 
@@ -109,23 +110,65 @@ namespace HOME
 
         public void GetRuns()
         {
-            if ((rwPlayer.GetButtonDown("RunL") || rwPlayer.GetButtonDown("RunR")) && _currentFunds >= costOfMove && pc.IsGrounded()) {
-                SetCurrentFunds(_currentFunds - costOfMove);
-                pc.Propel(moveForce);
+            if (GameOptions.DancePadMode)
+            {
+                if ((rwPlayer.GetButtonDown("RunL") || rwPlayer.GetButtonDown("RunR")) && _currentFunds >= costOfMove && pc.IsGrounded())
+                {
+                    SetCurrentFunds(_currentFunds - costOfMove);
+                    pc.Propel(moveForce);
+                }
+
+
+
+                if ((!rwPlayer.GetButton("RunL") && !rwPlayer.GetButton("RunR")) && hadFootDownLastFrame)
+                {
+                    pc.Jump();
+                }
+
+                if (rwPlayer.GetButton("RunL") || rwPlayer.GetButton("RunR"))
+                {
+                    hadFootDownLastFrame = true;
+                }
+                else
+                {
+                    hadFootDownLastFrame = false;
+                }
+
+                if (rwPlayer.GetButtonDown("Slide"))
+                {
+                    sliding = true;
+                    animator.SetBool("sliding", sliding);
+                }
+                else if (rwPlayer.GetButtonUp("Slide"))
+                {
+                    sliding = false;
+                    animator.SetBool("sliding", sliding);
+                }
             }
-            if (rwPlayer.GetButtonDown("Jump")) {
-                pc.Jump();
+            else
+            {
+                if ((rwPlayer.GetButtonDown("RunL") || rwPlayer.GetButtonDown("RunR")) && _currentFunds >= costOfMove && pc.IsGrounded())
+                {
+                    SetCurrentFunds(_currentFunds - costOfMove);
+                    pc.Propel(moveForce);
+                }
+                if (rwPlayer.GetButtonDown("Jump"))
+                {
+                    pc.Jump();
+                }
+
+                if (rwPlayer.GetButtonDown("Slide"))
+                {
+                    sliding = true;
+                    animator.SetBool("sliding", sliding);
+                }
+                else if (rwPlayer.GetButtonUp("Slide"))
+                {
+                    sliding = false;
+                    animator.SetBool("sliding", sliding);
+                }
             }
 
-            if (rwPlayer.GetButtonDown("Slide"))
-            {
-                sliding = true;
-                animator.SetBool("sliding", sliding);
-            } else if (rwPlayer.GetButtonUp("Slide"))
-            {
-                sliding = false;
-                animator.SetBool("sliding", sliding);
-            }
         }
 
         public void PlaySlideSound()

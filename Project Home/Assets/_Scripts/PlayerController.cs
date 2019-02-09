@@ -11,7 +11,9 @@ namespace HOME {
         [SerializeField] private Transform groundCheck;
         [SerializeField] private LayerMask whatIsGround;
         [SerializeField] private float jumpForce;
-        [SerializeField] private float maxSpeed;
+        [SerializeField] private float normalMaxSpeed;
+        [SerializeField] private float dancePadMaxSpeed;
+        private float currentMaxSpeed;
         [SerializeField] private float maxSpeedFactor;
         [SerializeField] private float minSpeedFactor;
         private float currentSpeedFactor;
@@ -32,7 +34,8 @@ namespace HOME {
         // Start is called before the first frame update
         void Start()
         {
-            
+            if (GameOptions.DancePadMode) { currentMaxSpeed = dancePadMaxSpeed; }
+            else { currentMaxSpeed = normalMaxSpeed; }
         }
 
         // Update is called once per frame
@@ -52,14 +55,14 @@ namespace HOME {
                 animator.SetBool("idle", false);
             }
 
-            if (rb2d.velocity.x > maxSpeed)
+            if (rb2d.velocity.x > currentMaxSpeed)
             {
-                rb2d.velocity = new Vector2(maxSpeed, rb2d.velocity.y);
+                rb2d.velocity = new Vector2(currentMaxSpeed, rb2d.velocity.y);
             }
 
             animator.SetBool("airborne", !IsGrounded());
 
-            currentSpeedFactor = Mathf.Lerp(minSpeedFactor, maxSpeedFactor, rb2d.velocity.x / maxSpeed);
+            currentSpeedFactor = Mathf.Lerp(minSpeedFactor, maxSpeedFactor, rb2d.velocity.x / currentMaxSpeed);
             animator.speed = currentSpeedFactor;
         }
 

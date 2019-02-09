@@ -1498,6 +1498,49 @@ MonoBehaviour:
   m_allowMouseInputIfTouchSupported: 1
   m_allowTouchInput: 1
   m_ForceModuleActive: 1
+--- !u!1 &1406341181
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1406341183}
+  - component: {fileID: 1406341182}
+  m_Layer: 0
+  m_Name: InputReader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1406341182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406341181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3c780290c5e1bf4dbf34f39818f866e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1406341183
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406341181}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 640, y: 360, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1418325990
 GameObject:
   m_ObjectHideFlags: 0
@@ -2368,7 +2411,7 @@ MonoBehaviour:
       - _actionCategoryId: 0
         _actionId: 0
         _elementType: 1
-        _elementIdentifierId: 45
+        _elementIdentifierId: 35
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
@@ -2379,7 +2422,7 @@ MonoBehaviour:
       - _actionCategoryId: 0
         _actionId: 5
         _elementType: 1
-        _elementIdentifierId: 45
+        _elementIdentifierId: 32
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
@@ -2390,7 +2433,7 @@ MonoBehaviour:
       - _actionCategoryId: 0
         _actionId: 0
         _elementType: 1
-        _elementIdentifierId: 43
+        _elementIdentifierId: 32
         _axisRange: 0
         _invert: 0
         _axisContribution: 1
@@ -2401,7 +2444,7 @@ MonoBehaviour:
       - _actionCategoryId: 0
         _actionId: 6
         _elementType: 1
-        _elementIdentifierId: 43
+        _elementIdentifierId: 35
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
@@ -2412,7 +2455,7 @@ MonoBehaviour:
       - _actionCategoryId: 0
         _actionId: 4
         _elementType: 1
-        _elementIdentifierId: 44
+        _elementIdentifierId: 38
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
@@ -2421,9 +2464,9 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 7
+        _actionId: 4
         _elementType: 1
-        _elementIdentifierId: 42
+        _elementIdentifierId: 39
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
@@ -2434,7 +2477,7 @@ MonoBehaviour:
       - _actionCategoryId: 0
         _actionId: 1
         _elementType: 1
-        _elementIdentifierId: 44
+        _elementIdentifierId: 33
         _axisRange: 0
         _invert: 0
         _axisContribution: 1
@@ -2445,7 +2488,7 @@ MonoBehaviour:
       - _actionCategoryId: 0
         _actionId: 1
         _elementType: 1
-        _elementIdentifierId: 42
+        _elementIdentifierId: 34
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
@@ -2456,7 +2499,29 @@ MonoBehaviour:
       - _actionCategoryId: 0
         _actionId: 2
         _elementType: 1
-        _elementIdentifierId: 32
+        _elementIdentifierId: 39
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 0
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 2
+        _elementType: 1
+        _elementIdentifierId: 41
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 0
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 2
+        _elementType: 1
+        _elementIdentifierId: 40
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
