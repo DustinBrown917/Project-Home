@@ -11,13 +11,13 @@ namespace HOME
         private static UIManager _instance;
         public static UIManager Instance { get { return _instance; } }
 
-        [SerializeField] private Text currentFundsText;
-        [SerializeField] private Text distanceText;
-        [SerializeField] private RiseAndFlashText highImpactText;
-        [SerializeField] private RiseAndFlashText lowImpactText;
-        [SerializeField] private Slider progressSlider;
+        [SerializeField] private Text[] fundsTexts;
+        [SerializeField] private Text[] distanceTexts;
+        [SerializeField] private RiseAndFlashText[] highImpactTexts;
+        [SerializeField] private RiseAndFlashText[] lowImpactTexts;
+        [SerializeField] private Slider[] progressSliders;
         private Coroutine cr_DistanceTimer = null;
-        private Coroutine cr_ResetTimer = null;
+        private Coroutine[] cr_ResetTimers;
 
         private AudioSource audioSource;
         [SerializeField] private AudioClip countdownSound;
@@ -27,13 +27,11 @@ namespace HOME
 
         private void Awake()
         {
-            if (_instance == null)
-            {
+            if (_instance == null) {
                 _instance = this;
                 audioSource = GetComponent<AudioSource>();
             }
-            else
-            {
+            else {
                 Destroy(gameObject);
             }
         }
@@ -41,17 +39,29 @@ namespace HOME
         // Start is called before the first frame update
         void Start()
         {
-            HOME.Player.Instance.FundsChanged += Instance_FundsChanged;
+            for(int i = 0; i < PlayerManager.PlayerCount; i++)
+            {
+                PlayerManager.GetPlayer(i).FundsChanged += Player_FundsChanged;
+            }
             CoroutineManager.BeginCoroutine(UpdateDistanceText(), ref cr_DistanceTimer, this);
-            highImpactText.ResetText();
-            highImpactText.gameObject.SetActive(false);
-            lowImpactText.ResetText();
-            lowImpactText.gameObject.SetActive(false);
+
+            for(int i = 0; i < PlayerManager.PlayerCount; i++)
+            {
+                highImpactTexts[i].ResetText();
+                highImpactTexts[i].gameObject.SetActive(false);
+                lowImpactTexts[i].ResetText();
+                lowImpactTexts[i].gameObject.SetActive(false);
+            }
+
+
+            if (cr_ResetTimers == null || cr_ResetTimers.Length != PlayerManager.PlayerCount) {
+                cr_ResetTimers = new Coroutine[PlayerManager.PlayerCount];
+            }
         }
 
-        private void Instance_FundsChanged(object sender, Player.FundsChangedArgs e)
+        private void Player_FundsChanged(object sender, Player.FundsChangedArgs e)
         {
-            currentFundsText.text = "$" + e.newFunds.ToString();
+            fundsTexts[e.playerIndex].text = "$" + e.newFunds.ToString();
         }
 
         private void OnDestroy()
@@ -62,22 +72,22 @@ namespace HOME
             }
         }
 
-        public void BroadCastHighImpact(string str, bool good)
+        public void BroadCastHighImpact(int playerIndex, string str, bool good)
         {
-            highImpactText.ResetText();
-            highImpactText.SetText(str);
-            highImpactText.SetGoodBad(good);
-            highImpactText.gameObject.SetActive(true);
-            highImpactText.BeginAnimate();
+            highImpactTexts[playerIndex].ResetText();
+            highImpactTexts[playerIndex].SetText(str);
+            highImpactTexts[playerIndex].SetGoodBad(good);
+            highImpactTexts[playerIndex].gameObject.SetActive(true);
+            highImpactTexts[playerIndex].BeginAnimate();
         }
 
-        public void BroadCastLowImpact(string str, bool good)
+        public void BroadCastLowImpact(int playerIndex, string str, bool good)
         {
-            lowImpactText.ResetText();
-            lowImpactText.SetText(str);
-            lowImpactText.SetGoodBad(good);
-            lowImpactText.gameObject.SetActive(true);
-            lowImpactText.BeginAnimate();
+            lowImpactTexts[playerIndex].ResetText();
+            lowImpactTexts[playerIndex].SetText(str);
+            lowImpactTexts[playerIndex].SetGoodBad(good);
+            lowImpactTexts[playerIndex].gameObject.SetActive(true);
+            lowImpactTexts[playerIndex].BeginAnimate();
         }
 
         private IEnumerator UpdateDistanceText()
@@ -86,30 +96,37 @@ namespace HOME
             while (true)
             {
                 yield return wfs;
-                distanceText.text = Player.Instance.transform.position.x.ToString("F2") + "m";
 
-                progressSlider.value = Player.Instance.transform.position.x;
-
-                if (Player.Instance.CurrentVelocity == 0.0f && cr_ResetTimer == null) 
+                for(int i = 0; i < PlayerManager.PlayerCount; i++)
                 {
-                    if (GameManager.Instance.CurrenState == GameStates.PLAYING) {
-                        CoroutineManager.BeginCoroutine(ResetTimer(), ref cr_ResetTimer, this);
+                    Player p = PlayerManager.GetPlayer(i);
+                    float distance = p.transform.position.x;
+
+                    distanceTexts[i].text = distance.ToString("F2") + "m";
+
+                    progressSliders[i].value = distance;
+
+                    if (p.CurrentVelocity == 0.0f && cr_ResetTimers[i] == null)
+                    {
+                        if(p.CurrentState == Player.PlayerStates.PLAYING)
+                        {
+                            CoroutineManager.BeginCoroutine(ResetTimer(i), ref cr_ResetTimers[i], this);
+                        }
+                    } else if(p.CurrentVelocity > 0.0f && cr_ResetTimers[i] != null)
+                    {
+                        CoroutineManager.HaltCoroutine(ref cr_ResetTimers[i], this);
                     }
-                } else if(Player.Instance.CurrentVelocity > 0.0f && cr_ResetTimer != null)
-                {
-                    CoroutineManager.HaltCoroutine(ref cr_ResetTimer, this);
                 }
             }
         }
 
-        private IEnumerator ResetTimer()
-        {
-            
-            if(Player.Instance.CurrentFunds > 0) {
-                UIManager.Instance.BroadCastHighImpact("Keep Moving!", false);
+        private IEnumerator ResetTimer(int playerIndex)
+        {          
+            if(PlayerManager.GetPlayer(playerIndex).CurrentFunds > 0) {
+                UIManager.Instance.BroadCastHighImpact(playerIndex, "Keep Moving!", false);
             }
             else {
-                UIManager.Instance.BroadCastHighImpact("Broke as the Berlin Wall!", false);              
+                UIManager.Instance.BroadCastHighImpact(playerIndex, "Broke as the Berlin Wall!", false);              
             }
 
             audioSource.clip = warningSound;
@@ -125,7 +142,7 @@ namespace HOME
                 if((int)seconds != intSeconds)
                 {
                     intSeconds = (int)seconds;
-                    UIManager.Instance.BroadCastHighImpact((intSeconds + 1).ToString(), false);
+                    UIManager.Instance.BroadCastHighImpact(playerIndex, (intSeconds + 1).ToString(), false);
                     audioSource.clip = countdownSound;
                     audioSource.Play();
                 }
@@ -133,10 +150,10 @@ namespace HOME
                 seconds -= Time.deltaTime;
                 yield return null;
             }
-            UIManager.Instance.BroadCastHighImpact("Parents! More Money Please!", false);
+            UIManager.Instance.BroadCastHighImpact(playerIndex, "Parents! More Money Please!", false);
             audioSource.clip = loseSound;
             audioSource.Play();
-            GameManager.Instance.ResetRun();
+            GameManager.Instance.ResetRun(playerIndex);
         }
 
         public void PlayAchievementSound()

@@ -13,7 +13,7 @@ namespace HOME
         private GameStates _currentState = GameStates.PRE_PLAY;
         public GameStates CurrenState { get { return _currentState; } }
 
-        private Coroutine cr_BeginPlayTimer = null;
+        private Coroutine[] cr_BeginPlayTimers;
 
         [SerializeField] CameraFollow cameraFollower;
         [SerializeField] CanvasGroup endScreenCanvasGroup;
@@ -36,8 +36,12 @@ namespace HOME
         // Start is called before the first frame update
         void Start()
         {
-            CoroutineManager.BeginCoroutine(BeginPlayTimer(), ref cr_BeginPlayTimer, this);
-            
+            cr_BeginPlayTimers = new Coroutine[PlayerManager.PlayerCount];
+            for(int i = 0; i < PlayerManager.PlayerCount; i++)
+            {
+                
+                CoroutineManager.BeginCoroutine(BeginPlayTimer(i), ref cr_BeginPlayTimers[i], this);
+            }
         }
 
         // Update is called once per frame
@@ -54,40 +58,58 @@ namespace HOME
             }
         }
 
-        public void ResetRun()
+        public void ResetRun(int playerIndex)
         {
-            OnRunReset();
-            CoroutineManager.BeginCoroutine(BeginPlayTimer(), ref cr_BeginPlayTimer, this);
+            OnRunReset(playerIndex);
+            CoroutineManager.BeginCoroutine(BeginPlayTimer(playerIndex), ref cr_BeginPlayTimers[playerIndex], this);
             _currentState = GameStates.PRE_PLAY;
         }
 
-        public void BeginPlay()
+        public void BeginPlay(int playerIndex)
         {
-            OnBeginPlay();
-            UIManager.Instance.BroadCastHighImpact("Wow! Such Independence!", true);
+            OnBeginPlay(playerIndex);
+            UIManager.Instance.BroadCastHighImpact(playerIndex, "Wow! Such Independence!", true);
             _currentState = GameStates.PLAYING;
         }
 
 
-        private IEnumerator BeginPlayTimer()
+        private IEnumerator BeginPlayTimer(int playerIndex)
         {
             yield return new WaitForSeconds(2.0f);
-            BeginPlay();
+            BeginPlay(playerIndex);
         }
 
 
-        public event EventHandler RunReset;
+        public event EventHandler<RunResetArgs> RunReset;
 
-        private void OnRunReset()
+        public class RunResetArgs : EventArgs
         {
-            RunReset?.Invoke(this, EventArgs.Empty);
+            public int playerIndex;
+
+            public RunResetArgs(int playerIndex) {
+                this.playerIndex = playerIndex;
+            }
         }
 
-        public event EventHandler PlayBegins;
-
-        private void OnBeginPlay()
+        private void OnRunReset(int playerIndex)
         {
-            PlayBegins?.Invoke(this, EventArgs.Empty);
+            RunReset?.Invoke(this, new RunResetArgs(playerIndex));
+        }
+
+        public event EventHandler<PlayBeginsArgs> PlayBegins;
+
+        public class PlayBeginsArgs : EventArgs
+        {
+            public int playerIndex;
+
+            public PlayBeginsArgs(int playerIndex) {
+                this.playerIndex = playerIndex;
+            }
+        }
+
+        private void OnBeginPlay(int playerIndex)
+        {
+            PlayBegins?.Invoke(this, new PlayBeginsArgs(playerIndex));
         }
 
         public void Victory()
@@ -113,9 +135,7 @@ namespace HOME
 
             SceneTransitioner.Instance.LoadScene(startScreenName);
         }
-    }
-
-    
+    }  
 }
 
 

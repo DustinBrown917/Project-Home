@@ -23,12 +23,17 @@ namespace HOME
 
         private void Start()
         {
-            for (int i = 0; i < Player.Instance.MileStones.Length; i++)
+            for(int h = 0; h < PlayerManager.PlayerCount; h++)
             {
-                milestoneGraphics[i].SetImage(Player.Instance.MileStones[i].sprite);
-                milestoneGraphics[i].SetStartPosition(imageZoomStartPosition.position);
+                Player p = PlayerManager.GetPlayer(h);
+                for (int i = 0; i < p.MileStones.Length; i++)
+                {
+                    milestoneGraphics[i].SetImage(p.MileStones[i].sprite);
+                    milestoneGraphics[i].SetStartPosition(imageZoomStartPosition.position);
+                }
+                awardInterval = slider.maxValue / milestoneGraphics.Length;
             }
-             awardInterval = slider.maxValue / milestoneGraphics.Length;
+
         }
 
         private void HandleSliderChanged(float value)

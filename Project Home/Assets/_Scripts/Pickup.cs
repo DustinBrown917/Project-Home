@@ -51,7 +51,7 @@ namespace HOME
             if (p != null)
             {
                 p.SetCurrentFunds(p.CurrentFunds + pickupValue);
-                UIManager.Instance.BroadCastHighImpact(itemDescription, (pickupValue > 0));
+                UIManager.Instance.BroadCastHighImpact(p.Index, itemDescription, (pickupValue > 0));
                 PickupManager.Instance.PlaySound(pickupValue > 0);
             }
 

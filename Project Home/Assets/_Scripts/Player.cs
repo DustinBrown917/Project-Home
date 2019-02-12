@@ -8,15 +8,18 @@ namespace HOME
 {
     public class Player : MonoBehaviour
     {
-        private static Player _instance = null;
-        public static Player Instance { get { return _instance; } }
+        private int myIndex = -1;
+        public int Index { get { return myIndex; } }
+
+        private PlayerStates myCurrentState;
+        public PlayerStates CurrentState { get { return myCurrentState; } }
 
         public float CurrentVelocity { get { return pc.Rb2d.velocity.x; } }
 
         [SerializeField] private MileStone[] achievements;
         public MileStone[] MileStones { get { return achievements; } } //Gamejam bad code!
 
-        [SerializeField] float _runStartFunds = 10000.0f;
+        [SerializeField] float _runStartFunds = 1000.0f;
 
         [SerializeField] private float _currentFunds = 0.0f;
         public float CurrentFunds { get { return _currentFunds; } }
@@ -26,6 +29,7 @@ namespace HOME
 
         [SerializeField] private float costOfMove = 2.0f;
         [SerializeField] private Vector2 moveForce;
+        [SerializeField] private Vector2 dp_moveForce;
         [SerializeField] private Vector2 initialForce;
         [SerializeField] private GameObject startingPoint;
         [SerializeField] private RiseAndFlashText toastText;
@@ -48,54 +52,67 @@ namespace HOME
 
         private void Awake()
         {
-            if(_instance == null) {
-                _instance = this;
-            } else {
-                Destroy(gameObject);
-            }
+            RegisterPlayer();
 
             for(int i = 0; i < achievements.Length; i++)
             {
                 achievements[i].Unachieve();
             }
 
-            rwPlayer = ReInput.players.GetPlayer(0);
+            rwPlayer = ReInput.players.GetPlayer(myIndex);
             pc = GetComponent<PlayerController>();
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
+            GameManager.Instance.RunReset += GameManager_RunReset;
+            GameManager.Instance.PlayBegins += GameManager_PlayBegins;
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            GameManager.Instance.RunReset += GameManager_RunReset;
-            GameManager.Instance.PlayBegins += GameManager_PlayBegins;
+            
         }
 
-        private void GameManager_PlayBegins(object sender, EventArgs e)
+        private void GameManager_RunReset(object sender, GameManager.RunResetArgs e)
         {
-            BeginPlay();
+            if (e.playerIndex == myIndex) {
+                ResetRun();
+            }
         }
 
-        private void GameManager_RunReset(object sender, EventArgs e)
+        private void GameManager_PlayBegins(object sender, GameManager.PlayBeginsArgs e)
         {
-            ResetRun();
+            if(e.playerIndex == myIndex) {
+                BeginPlay();
+
+                Debug.Log("Player " + e.playerIndex.ToString() + " begin play.");
+            }
         }
+
 
         // Update is called once per frame
         void Update()
         {
 
-            if (!handleInput) { return; }
+            if (!handleInput || myCurrentState != PlayerStates.PLAYING) { return; }
             GetRuns();
         }
 
         private void OnDestroy()
         {
-            if(_instance == this)
-            {
-                _instance = null;
-            }
+            DeregisterPlayer();
+        }
+
+        public void RegisterPlayer()
+        {
+            if (PlayerManager.IsPlayerRegistered(this)) { return; }
+
+            myIndex = PlayerManager.AddPlayer(this);
+        }
+
+        public void DeregisterPlayer()
+        {
+            PlayerManager.RemovePlayer(this);
         }
 
         public int GetLevel()
@@ -110,32 +127,27 @@ namespace HOME
 
         public void GetRuns()
         {
-            if (GameOptions.DancePadMode)
+            if (GameOptions.GetDancepadMode())
             {
                 if ((rwPlayer.GetButtonDown("RunL") || rwPlayer.GetButtonDown("RunR")) && _currentFunds >= costOfMove && pc.IsGrounded())
                 {
                     SetCurrentFunds(_currentFunds - costOfMove);
-                    pc.Propel(moveForce);
+                    pc.Propel(dp_moveForce);
                 }
-
-
 
                 if ((!rwPlayer.GetButton("RunL") && !rwPlayer.GetButton("RunR")) && hadFootDownLastFrame)
                 {
                     pc.Jump();
                 }
 
-                if (rwPlayer.GetButton("RunL") || rwPlayer.GetButton("RunR"))
-                {
+                if (rwPlayer.GetButton("RunL") || rwPlayer.GetButton("RunR")) {
                     hadFootDownLastFrame = true;
                 }
-                else
-                {
+                else {
                     hadFootDownLastFrame = false;
                 }
 
-                if (rwPlayer.GetButtonDown("Slide"))
-                {
+                if (rwPlayer.GetButtonDown("Slide") && hadFootDownLastFrame) {
                     sliding = true;
                     animator.SetBool("sliding", sliding);
                 }
@@ -180,7 +192,7 @@ namespace HOME
         public void SetCurrentFunds(float funds)
         {
             if(funds < 0) { funds = 0; }
-            FundsChangedArgs args = new FundsChangedArgs(_currentFunds, funds);
+            FundsChangedArgs args = new FundsChangedArgs(_currentFunds, funds, myIndex);
             _currentFunds = funds;
             OnFundsChanged(args);
             if(Mathf.Abs(args.difference) > 50.0f)
@@ -202,6 +214,7 @@ namespace HOME
 
         public void BeginPlay()
         {
+            myCurrentState = PlayerStates.PLAYING;
             SetCurrentFunds(_runStartFunds * GetLevel());
             pc.Propel(initialForce);
             audioSource.clip = launch;
@@ -212,6 +225,7 @@ namespace HOME
 
         public void ResetRun()
         {
+            myCurrentState = PlayerStates.PRE_PLAY;
             transform.position = new Vector3(startingPoint.transform.position.x, startingPoint.transform.position.y, transform.position.z);
             handleInput = false;
             if (sliding)
@@ -238,9 +252,10 @@ namespace HOME
                 {
                     if (transform.position.x > achievements[i].GoalDistance && !achievements[i].Achieved)
                     {
-                        achievements[i].Achieve();
+                        achievements[i].Achieve(myIndex);
                         if(i == achievements.Length - 1)
                         {
+                            myCurrentState = PlayerStates.POST_PLAY;
                             GameManager.Instance.Victory();
                         }
                         break;
@@ -253,14 +268,16 @@ namespace HOME
         public event EventHandler<FundsChangedArgs> FundsChanged;
 
         public class FundsChangedArgs : EventArgs {
+            public int playerIndex;
             public float oldFunds;
             public float newFunds;
             public float difference { get { return newFunds - oldFunds; } }
 
-            public FundsChangedArgs(float oldFunds, float newFunds) : base()
+            public FundsChangedArgs(float oldFunds, float newFunds, int playerIndex) : base()
             {
                 this.oldFunds = oldFunds;
                 this.newFunds = newFunds;
+                this.playerIndex = playerIndex;
             }
         }
 
@@ -269,6 +286,12 @@ namespace HOME
             FundsChanged?.Invoke(this, e);
         }
 
+        public enum PlayerStates
+        {
+            PRE_PLAY,
+            PLAYING,
+            POST_PLAY
+        }
     }
 }
 

@@ -17,10 +17,10 @@ namespace HOME
         private bool _achieved = false;
         public bool Achieved { get { return _achieved; } }
 
-        public void Achieve()
+        public void Achieve(int playerIndex)
         {
             _achieved = true;
-            UIManager.Instance.BroadCastLowImpact(milestoneDescription, true);
+            UIManager.Instance.BroadCastLowImpact(playerIndex, milestoneDescription, true);
             UIManager.Instance.PlayAchievementSound();
         }
 

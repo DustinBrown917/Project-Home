@@ -34,7 +34,7 @@ namespace HOME {
         // Start is called before the first frame update
         void Start()
         {
-            if (GameOptions.DancePadMode) { currentMaxSpeed = dancePadMaxSpeed; }
+            if (GameOptions.GetDancepadMode()) { currentMaxSpeed = dancePadMaxSpeed; }
             else { currentMaxSpeed = normalMaxSpeed; }
         }
 
