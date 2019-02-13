@@ -31,16 +31,12 @@ namespace HOME
             transform.position = cachedPosition;
         }
 
-        // Start is called before the first frame update
-        void Start()
+        public void SetLayer(int layer)
         {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            gameObject.layer = layer;
+            for(int i = 0; i < transform.childCount; i++) {
+                transform.GetChild(i).gameObject.layer = layer;
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D collision)

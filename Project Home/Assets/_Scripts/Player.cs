@@ -8,6 +8,7 @@ namespace HOME
 {
     public class Player : MonoBehaviour
     {
+        [SerializeField] private int preferredIndex;
         private int myIndex = -1;
         public int Index { get { return myIndex; } }
 
@@ -84,8 +85,6 @@ namespace HOME
         {
             if(e.playerIndex == myIndex) {
                 BeginPlay();
-
-                Debug.Log("Player " + e.playerIndex.ToString() + " begin play.");
             }
         }
 
@@ -93,7 +92,6 @@ namespace HOME
         // Update is called once per frame
         void Update()
         {
-
             if (!handleInput || myCurrentState != PlayerStates.PLAYING) { return; }
             GetRuns();
         }
@@ -107,7 +105,8 @@ namespace HOME
         {
             if (PlayerManager.IsPlayerRegistered(this)) { return; }
 
-            myIndex = PlayerManager.AddPlayer(this);
+            PlayerManager.AddPlayer(this, preferredIndex);
+            myIndex = preferredIndex;
         }
 
         public void DeregisterPlayer()

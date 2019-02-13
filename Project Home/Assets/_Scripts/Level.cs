@@ -9,42 +9,44 @@ namespace HOME
         private static Level _instance = null;
         public static Level Instance { get { return _instance; } }
 
-
-        private static List<LevelChunk> levelChunks = new List<LevelChunk>();
+        private static List<LevelChunk>[] levelChunksLists;
         private static List<LevelChunk> inactiveLevelChunks = new List<LevelChunk>();
         private static float chunkWidth = 16.0f;
 
         [SerializeField] private GameObject levelChunkPrefab;
-        [SerializeField] private LevelChunk initialChunk;
+        [SerializeField] private LevelChunk[] initialChunks;
 
         private void Awake()
         {
-            if (_instance == null)
-            {
-                _instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-
-            for (int i = 0; i < 10; i++)
-            {
-                LevelChunk lc = Instantiate(levelChunkPrefab, Level.Instance.transform).GetComponent<LevelChunk>();
-                lc.gameObject.SetActive(false);
-                inactiveLevelChunks.Add(lc);
-            }
-            levelChunks.Add(initialChunk);
+            if (_instance == null) {  _instance = this; }
+            else { Destroy(gameObject); }
         }
 
         private void Start()
         {
+            levelChunksLists = new List<LevelChunk>[PlayerManager.PlayerCount];
+            for (int i = 0; i < levelChunksLists.Length; i++) {
+                levelChunksLists[i] = new List<LevelChunk>();
+            }
+
             GameManager.Instance.RunReset += GameManager_RunReset;
+
+            for (int i = 0; i < 10; i++) {
+                LevelChunk lc = Instantiate(levelChunkPrefab, Level.Instance.transform).GetComponent<LevelChunk>();
+                lc.gameObject.SetActive(false);
+                inactiveLevelChunks.Add(lc);
+            }
+            for (int i = 0; i < levelChunksLists.Length; i++)
+            {
+                
+                levelChunksLists[i].Add(initialChunks[i]);
+                levelChunksLists[i][0].SetPlayerIndex(i);
+            }
         }
 
-        private void GameManager_RunReset(object sender, System.EventArgs e)
+        private void GameManager_RunReset(object sender, GameManager.RunResetArgs e)
         {
-            ResetRun();
+            ResetRun(e.playerIndex);
         }
 
         private void OnDestroy()
@@ -55,46 +57,62 @@ namespace HOME
             }
         }
 
-        public static void HandleNewChunkEntered(LevelChunk chunk)
+        public static void HandleNewChunkEntered(LevelChunk chunk, int playerIndex)
         {
-            if (levelChunks.Count >= 3)
+            
+            if (levelChunksLists[playerIndex].Count >= 3)
             {
-                if (levelChunks[2] == chunk)
+                if (levelChunksLists[playerIndex][2] == chunk)
                 {
-                    levelChunks[0].PoolPickups();
-                    levelChunks[0].gameObject.SetActive(false);
-                    inactiveLevelChunks.Add(levelChunks[0]);
-                    levelChunks.RemoveAt(0);
+                    levelChunksLists[playerIndex][0].PoolPickups();
+                    levelChunksLists[playerIndex][0].gameObject.SetActive(false);
+                    inactiveLevelChunks.Add(levelChunksLists[playerIndex][0]);
+                    levelChunksLists[playerIndex].RemoveAt(0);
                 }
             }
 
 
-            if (levelChunks.Count < 4)
+            if (levelChunksLists[playerIndex].Count < 4)
             {
-                for (int i = 0; i < 4 - levelChunks.Count; i++)
+                for (int i = 0; i < 4 - levelChunksLists[playerIndex].Count; i++)
                 {
-                    PlacePooledChunk();
+                    PlacePooledChunk(playerIndex);
                 }
             }
         }
 
-        public static void PlacePooledChunk()
+        public static void PlacePooledChunk(int playerIndex)
         {
             LevelChunk lc = inactiveLevelChunks[0];
             inactiveLevelChunks.Remove(lc);
+            lc.SetPlayerIndex(playerIndex);
+            Debug.Log(playerIndex);
+            switch (playerIndex) {
+                case 0:
+                    lc.gameObject.layer = LayerMask.NameToLayer("P1LevelChunk");
+                    lc.gameObject.transform.GetChild(1).gameObject.layer = LayerMask.NameToLayer("P1LevelChunk");
+                    break;
+                case 1:
+                    lc.gameObject.layer = LayerMask.NameToLayer("P2LevelChunk");
+                    lc.gameObject.transform.GetChild(1).gameObject.layer = LayerMask.NameToLayer("P2LevelChunk");
+                    break;
+                default:
+                    break;
+            }
+
             lc.gameObject.SetActive(true);
-            Vector3 newPos = levelChunks[levelChunks.Count - 1].gameObject.transform.position;
-            levelChunks.Add(lc);
+            Vector3 newPos = levelChunksLists[playerIndex][levelChunksLists[playerIndex].Count - 1].gameObject.transform.position;
+            levelChunksLists[playerIndex].Add(lc);
             newPos.x += chunkWidth;
             lc.transform.position = newPos;
-            lc.SpawnPickups();
+            lc.SpawnPickups(playerIndex);
         }
 
-        public void ResetRun()
+        public void ResetRun(int playerIndex)
         {
-            for(int i = 0; i < levelChunks.Count; i++)
+            for(int i = 0; i < levelChunksLists[playerIndex].Count; i++)
             {
-                levelChunks[i].transform.position = new Vector3(i * chunkWidth, levelChunks[i].transform.position.y, levelChunks[i].transform.position.z);
+                levelChunksLists[playerIndex][i].transform.position = new Vector3(i * chunkWidth, levelChunksLists[playerIndex][i].transform.position.y, levelChunksLists[playerIndex][i].transform.position.z);
             }
         }
     }

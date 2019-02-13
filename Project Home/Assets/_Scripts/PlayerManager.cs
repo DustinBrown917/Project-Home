@@ -9,10 +9,13 @@ namespace HOME
         private static List<Player> players_ = new List<Player>();
         public static int PlayerCount { get { return players_.Count; } }
 
-        public static int AddPlayer(Player p)
+        public static void AddPlayer(Player p, int index)
         {
-            players_.Add(p);
-            return players_.Count - 1;
+            if(players_.Count > index) {
+                players_[index] = p;
+            } else {
+                players_.Insert(index, p);
+            } 
         }
 
         public static Player GetPlayer(int index)

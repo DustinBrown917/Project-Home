@@ -56,7 +56,7 @@ namespace HOME
         private IEnumerator WaitThenMove()
         {
             transform.position = startPosition;
-            outline.transform.localScale = new Vector3(3, 3, 3);
+            outline.transform.localScale = new Vector3(3.0f/PlayerManager.PlayerCount, 3.0f / PlayerManager.PlayerCount, 1);
             yield return new WaitForSeconds(1.0f);
             CoroutineManager.BeginCoroutine(CREffects.ZoomToScale(outline.transform, outline.transform.localScale, Vector3.one, 0.2f), ref cr_Achievement, this);
             CoroutineManager.BeginCoroutine(CREffects.ZoomToPosition(transform, transform.position, homePosition, 0.2f), ref cr_MovePos, this);

@@ -1362,7 +1362,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelChunkPrefab: {fileID: 7473575937393496541, guid: 3dfd8630eab57a74b8120b9025193d12,
     type: 3}
-  initialChunk: {fileID: 1296517498}
+  initialChunks:
+  - {fileID: 1296517498}
 --- !u!1 &678907139
 GameObject:
   m_ObjectHideFlags: 0

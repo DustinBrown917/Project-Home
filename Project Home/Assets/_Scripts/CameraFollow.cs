@@ -20,20 +20,17 @@ namespace HOME
             GameManager.Instance.RunReset += GameManager_RunReset;
         }
 
-        private void GameManager_RunReset(object sender, System.EventArgs e)
+        private void GameManager_RunReset(object sender, GameManager.RunResetArgs e)
         {
-            ResetRun();
+            ResetRun(e.playerIndex);
         }
 
-        // Update is called once per frame
-        void Update()
+        public void ResetRun(int index)
         {
-
-        }
-
-        public void ResetRun()
-        {
-            transform.position = new Vector3(followTarget.transform.position.x, transform.position.y, transform.position.z);
+            Player p = followTarget.GetComponent<Player>();
+            if(p!= null && index == p.Index) {
+                transform.position = new Vector3(followTarget.transform.position.x, transform.position.y, transform.position.z);
+            } 
         }
 
         public void SetFollow(bool follow)

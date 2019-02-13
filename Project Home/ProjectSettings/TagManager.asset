@@ -13,13 +13,13 @@ TagManager:
   - UI
   - 
   - 
-  - Player
+  - Player1
   - Ground
-  - LevelChunk
-  - Pickups
-  - 
-  - 
-  - 
+  - P1LevelChunk
+  - P1Pickups
+  - P2LevelChunk
+  - P2Pickups
+  - Player2
   - 
   - 
   - 
