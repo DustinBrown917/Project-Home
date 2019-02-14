@@ -29,6 +29,7 @@ namespace HOME
         private PlayerController pc;
 
         [SerializeField] private float costOfMove = 2.0f;
+        [SerializeField] private float moveForceDegenerationFactor = 1.5f;
         [SerializeField] private Vector2 moveForce;
         [SerializeField] private Vector2 dp_moveForce;
         [SerializeField] private Vector2 initialForce;
@@ -131,7 +132,9 @@ namespace HOME
                 if ((rwPlayer.GetButtonDown("RunL") || rwPlayer.GetButtonDown("RunR")) && _currentFunds >= costOfMove && pc.IsGrounded())
                 {
                     SetCurrentFunds(_currentFunds - costOfMove);
-                    pc.Propel(dp_moveForce);
+                    Vector2 f = dp_moveForce * Mathf.Clamp((moveForceDegenerationFactor - (CurrentVelocity / pc.CurrentMaxSpeed)), 0.0f, moveForceDegenerationFactor);
+                    pc.Propel(f);
+                    Debug.Log(f);
                 }
 
                 if ((!rwPlayer.GetButton("RunL") && !rwPlayer.GetButton("RunR")) && hadFootDownLastFrame)
@@ -161,7 +164,9 @@ namespace HOME
                 if ((rwPlayer.GetButtonDown("RunL") || rwPlayer.GetButtonDown("RunR")) && _currentFunds >= costOfMove && pc.IsGrounded())
                 {
                     SetCurrentFunds(_currentFunds - costOfMove);
-                    pc.Propel(moveForce);
+                    Vector2 f = dp_moveForce * Mathf.Clamp((moveForceDegenerationFactor - (CurrentVelocity / pc.CurrentMaxSpeed)), 0.0f, moveForceDegenerationFactor);
+                    pc.Propel(f);
+                    Debug.Log(f);
                 }
                 if (rwPlayer.GetButtonDown("Jump"))
                 {

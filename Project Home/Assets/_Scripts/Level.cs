@@ -86,7 +86,6 @@ namespace HOME
             LevelChunk lc = inactiveLevelChunks[0];
             inactiveLevelChunks.Remove(lc);
             lc.SetPlayerIndex(playerIndex);
-            Debug.Log(playerIndex);
             switch (playerIndex) {
                 case 0:
                     lc.gameObject.layer = LayerMask.NameToLayer("P1LevelChunk");
