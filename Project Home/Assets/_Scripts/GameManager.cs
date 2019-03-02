@@ -13,6 +13,8 @@ namespace HOME
         private GameStates _currentState = GameStates.PRE_PLAY;
         public GameStates CurrenState { get { return _currentState; } }
 
+        [SerializeField] Player[] players;
+
         private Coroutine[] cr_BeginPlayTimers;
 
         [SerializeField] CameraFollow cameraFollower;
@@ -26,6 +28,11 @@ namespace HOME
         {
             if(_instance == null) {
                 _instance = this;
+
+                for(int i = 0; i < players.Length; i++)
+                {
+                    players[i].RegisterPlayer();
+                }
             }
             else {
                 Destroy(gameObject);

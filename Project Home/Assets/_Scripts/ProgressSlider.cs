@@ -33,7 +33,6 @@ namespace HOME
                 }
                 awardInterval = slider.maxValue / milestoneGraphics.Length;
             }
-
         }
 
         private void HandleSliderChanged(float value)

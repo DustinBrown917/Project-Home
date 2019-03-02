@@ -54,14 +54,11 @@ namespace HOME
 
         private void Awake()
         {
-            RegisterPlayer();
-
             for(int i = 0; i < achievements.Length; i++)
             {
                 achievements[i].Unachieve();
             }
 
-            rwPlayer = ReInput.players.GetPlayer(myIndex);
             pc = GetComponent<PlayerController>();
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
@@ -102,12 +99,21 @@ namespace HOME
             DeregisterPlayer();
         }
 
+        public void AssignIndex(int index)
+        {
+            myIndex = index;
+        }
+
+        public void AssignRwPlayer(Rewired.Player rwp)
+        {
+            rwPlayer = rwp;
+        }
+
         public void RegisterPlayer()
         {
             if (PlayerManager.IsPlayerRegistered(this)) { return; }
 
-            PlayerManager.AddPlayer(this, preferredIndex);
-            myIndex = preferredIndex;
+            PlayerManager.AddPlayer(this);
         }
 
         public void DeregisterPlayer()
@@ -134,7 +140,6 @@ namespace HOME
                     SetCurrentFunds(_currentFunds - costOfMove);
                     Vector2 f = dp_moveForce * Mathf.Clamp((moveForceDegenerationFactor - (CurrentVelocity / pc.CurrentMaxSpeed)), 0.0f, moveForceDegenerationFactor);
                     pc.Propel(f);
-                    Debug.Log(f);
                 }
 
                 if ((!rwPlayer.GetButton("RunL") && !rwPlayer.GetButton("RunR")) && hadFootDownLastFrame)
@@ -166,7 +171,6 @@ namespace HOME
                     SetCurrentFunds(_currentFunds - costOfMove);
                     Vector2 f = dp_moveForce * Mathf.Clamp((moveForceDegenerationFactor - (CurrentVelocity / pc.CurrentMaxSpeed)), 0.0f, moveForceDegenerationFactor);
                     pc.Propel(f);
-                    Debug.Log(f);
                 }
                 if (rwPlayer.GetButtonDown("Jump"))
                 {

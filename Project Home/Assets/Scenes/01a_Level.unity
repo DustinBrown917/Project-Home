@@ -3527,6 +3527,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0308c227a9adf4a4cb151ab7e1787988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players:
+  - {fileID: 5843411345578866067}
   cameraFollower: {fileID: 519420030}
   endScreenCanvasGroup: {fileID: 678907141}
   endScreenFadeDuration: 2
@@ -4292,8 +4294,25 @@ PrefabInstance:
       propertyPath: startingPoint
       value: 
       objectReference: {fileID: 2140106986}
+    - target: {fileID: 5843411346633057268, guid: 31b7249aafb8ea54192e81d213cc48f5,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: ba25b3eafb74601439a86524049d0346, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31b7249aafb8ea54192e81d213cc48f5, type: 3}
+--- !u!114 &5843411345578866067 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5843411346633057270, guid: 31b7249aafb8ea54192e81d213cc48f5,
+    type: 3}
+  m_PrefabInstance: {fileID: 5843411345578866066}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094440543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58cc8f1a6d649f8469e37f52554cdb4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &6364668116030088303 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6364668116030088303, guid: 4faaf717800c88645824494fe5b83997,

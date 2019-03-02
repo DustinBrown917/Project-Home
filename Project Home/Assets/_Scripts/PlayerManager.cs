@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Rewired;
 using UnityEngine;
 
 namespace HOME
@@ -9,13 +10,12 @@ namespace HOME
         private static List<Player> players_ = new List<Player>();
         public static int PlayerCount { get { return players_.Count; } }
 
-        public static void AddPlayer(Player p, int index)
+        public static void AddPlayer(Player p)
         {
-            if(players_.Count > index) {
-                players_[index] = p;
-            } else {
-                players_.Insert(index, p);
-            } 
+            if (players_.Contains(p)) { return; }
+            players_.Add(p);
+            p.AssignRwPlayer(ReInput.players.GetPlayer(players_.Count - 1));
+            p.AssignIndex(players_.Count - 1);
         }
 
         public static Player GetPlayer(int index)
